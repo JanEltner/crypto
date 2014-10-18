@@ -1,6 +1,7 @@
 package ellipticCurve;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 public class EllipticCurvePoint implements PointInterface
 {
@@ -34,52 +35,46 @@ public class EllipticCurvePoint implements PointInterface
 		return curve;
 	}
 
-	public PointInterface add(EllipticCurvePoint point2)
+	public PointInterface add(PointInterface point2)
 	{
 		EllipticCurvePoint newPoint;
 		if(point2.isInfinityPoint())
 		{
 			newPoint = this;
-			System.out.println("p2 is ifty");
 		}
 		else
 		{
-			if(this.x.equals(point2.getX()))
+			EllipticCurvePoint ellipticPoint = (EllipticCurvePoint)point2;
+			if(this.x.equals(ellipticPoint.getX()))
 			{
-				if(this.y.equals(point2.getY()))
+				if(this.y.equals(ellipticPoint.getY()))
 				{
-					newPoint = this.doublePoint();
-					System.out.println("double");
+					newPoint = (EllipticCurvePoint)this.doublePoint();
 				}
 				else
 				{
-					System.out.println("result is ifty");
 					infinitPoint result = new infinitPoint();
-					System.out.println(result);
 					return  result;
 				}
 			}	
 			else
 			{
-				BigInteger s = point2.getY().subtract(this.y).divide(point2.getX().subtract(this.x)).mod(this.curve.getP());
-				BigInteger newX = s.modPow(BigInteger.valueOf(2), this.curve.getP()).subtract(this.x).subtract(point2.getX()).mod(this.curve.getP());
+				BigInteger s = ellipticPoint.getY().subtract(this.y).multiply(ExtendedEuclideanAlgorithm.getMultiplicativeInverse(ellipticPoint.getX().subtract(this.x),this.curve.getP())).mod(this.curve.getP());
+				BigInteger newX = s.modPow(BigInteger.valueOf(2), this.curve.getP()).subtract(this.x).subtract(ellipticPoint.getX()).mod(this.curve.getP());
 				BigInteger newY = s.multiply(this.x.subtract(newX)).subtract(this.y).mod(this.curve.getP());
 				newPoint = new EllipticCurvePoint(newX, newY, this.curve);
-				System.out.println("normal add");
 			}
 		}
-		System.out.println(newPoint);
 		return newPoint;
 	}
-	public EllipticCurvePoint doublePoint()
+	public PointInterface doublePoint()
 	{
 		EllipticCurvePoint newPoint;
 		
-		BigInteger s = BigInteger.valueOf(3).multiply(this.x.modPow(BigInteger.valueOf(2), this.curve.getP())).add(this.curve.getA()).divide(this.y.multiply(BigInteger.valueOf(2))).mod(this.curve.getP());
+		BigInteger s = BigInteger.valueOf(3).multiply(this.x.modPow(BigInteger.valueOf(2), this.curve.getP())).add(this.curve.getA()).multiply(ExtendedEuclideanAlgorithm.getMultiplicativeInverse(this.y.multiply(BigInteger.valueOf(2)),this.curve.getP())).mod(this.curve.getP());
 		BigInteger newX = s.modPow(BigInteger.valueOf(2), this.curve.getP()).subtract(this.x).subtract(this.x).mod(this.curve.getP());
 		BigInteger newY = s.multiply(this.x.subtract(newX)).subtract(this.y).mod(this.curve.getP());
 		newPoint = new EllipticCurvePoint(newX, newY, this.curve);
-		System.out.println(newPoint);
 		return newPoint;
 	}
 	
@@ -87,6 +82,39 @@ public class EllipticCurvePoint implements PointInterface
 	{
 		return new EllipticCurvePoint(this.x, this.y.multiply(BigInteger.valueOf(-1)).mod(this.curve.getP()), this.curve);
 	}
+	
+	public PointInterface multiply(BigInteger factor)
+	{
+		if(factor.equals(BigInteger.ZERO))
+		{
+			return new infinitPoint();
+		}
+		else if(factor.equals(BigInteger.ONE)) 
+		{
+			return this;
+		}
+		else
+		{
+			PointInterface result = new EllipticCurvePoint(this.x,this.y,this.curve);
+			factor = factor.mod(this.curve.getP());
+			ArrayList<Boolean> bits = new ArrayList<Boolean>();
+			while(!factor.equals(BigInteger.ZERO))
+			{
+				bits.add(factor.mod(BigInteger.valueOf(2)).intValue()==1);
+				factor = factor.shiftRight(1);
+			}
+			for(int i = bits.size()-1; i>=0;i--)
+			{
+				result = result.doublePoint();
+				if(bits.get(i))
+				{
+					result = result.add(this);
+				}
+			}
+			return result;			
+		}
+	}
+	
 	public boolean isInfinityPoint()
 	{
 		return false;
