@@ -53,10 +53,6 @@ public class kAry
 		{
 			for(int l= 0; l<this.windowSize;l++)
 			{
-				if(result == null)
-				{
-					System.out.println("result is null!");
-				}
 				result = result.modPow(BigInteger.valueOf(2), this.modulo);
 			}
 			exp = 0;
@@ -68,7 +64,6 @@ public class kAry
 				}
 			}
 			exp = exp % maxExponent;
-			System.out.println("this.lookUpTable.get(exp)" + exp);
 			result = result.multiply(this.lookUpTable.get(exp)).mod(this.modulo);
 		}
 		return result;
