@@ -64,7 +64,10 @@ public class kAry
 				}
 			}
 			exp = exp % maxExponent;
-			result = result.multiply(this.lookUpTable.get(exp)).mod(this.modulo);
+			if(exp != 0)
+			{
+				result = result.multiply(this.lookUpTable.get(exp)).mod(this.modulo);
+			}
 		}
 		return result;
 	}
