@@ -24,12 +24,11 @@ public class ImprovedKAry {
 		//value of 2 calculated via square due to lower calculation cost
 		//remaining values gets calculated sequential
 		int limit = (int)Math.pow(2, this.windowSize);
-		this.lookUpTable.put(0, BigInteger.ONE);
 		this.lookUpTable.put(1, this.base);
 		this.lookUpTable.put(2, this.base.modPow(BigInteger.valueOf(2), this.modulo));
-		for(int i=3;i<limit;i++)
+		for(int i=3;i<limit;i+=2)
 		{
-			this.lookUpTable.put(i, this.lookUpTable.get(i-1).multiply(this.base).mod(this.modulo));
+			this.lookUpTable.put(i, this.lookUpTable.get(i-2).multiply(this.lookUpTable.get(2)).mod(this.modulo));
 		}
 	}
 
