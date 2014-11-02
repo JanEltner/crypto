@@ -41,6 +41,7 @@ public class kAry
 		int t = (int) Math.ceil((float)bitlength/this.windowSize);
 		int exp = 0; 
 		int maxExponent = (int) Math.pow(2, this.windowSize);
+		//init step
 		for(int i=(t-1)*this.windowSize;i<bitlength;i++)
 		{
 			if(i>=0 && exponent.testBit(i))
@@ -49,21 +50,29 @@ public class kAry
 			}
 		}
 		BigInteger result = this.lookUpTable.get(exp);
-		for(int n = 0; n<t-1; n++)
+		//stepping over the windows
+		for(int n = 2; n<=t; n++)
 		{
+			//squaring
 			for(int l= 0; l<this.windowSize;l++)
 			{
+				if(result == null)
+				{
+					System.out.println("result is null!");
+				}
 				result = result.modPow(BigInteger.valueOf(2), this.modulo);
 			}
 			exp = 0;
-			for(int i=(t-2-n)*this.windowSize;i<bitlength;i++)
+			//Determine current exponent for the multiplication
+			for(int i=0;i<this.windowSize;i++)
 			{
-				if(i>=0 && exponent.testBit(i))
+				if(exponent.testBit((t-n)*this.windowSize+i))
 				{
-					exp += Math.pow(2, i-(t-2-n)*this.windowSize);
+					exp += Math.pow(2, i);
 				}
 			}
 			exp = exp % maxExponent;
+			//multiplication
 			if(exp != 0)
 			{
 				result = result.multiply(this.lookUpTable.get(exp)).mod(this.modulo);
