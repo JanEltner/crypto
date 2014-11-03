@@ -2,18 +2,16 @@ def encrypt(plain, a,b):
 	result = ""
 	for i in plain:
 		o = ord(i)
+		offset = 0
 		if(o>=ord("A") and o <= ord("Z")):
-			o -= (ord("A"))
-			o *= a
-			o += b
-			o %= 26
-			o += ord("A")
+			offset  = ord("A")
 		if(o>=ord("a") and o <= ord("z")):
-			o -= (ord("a"))
-			o *= a
-			o += b
-			o %= 26
-			o += ord("a")
+			offset  = ord("a")
+		o -= offset
+		o *= a
+		o += b
+		o %= 26
+		o += offset
 		result += chr(o)
 	return result
 
@@ -30,41 +28,30 @@ def decrypt(cipher, a,b):
 	for i in cipher:
 		o = ord(i)
 		if(o>=ord("A") and o <= ord("Z")):
-			o -= (ord("A"))
-			o -= b
-			o *= aInvers
-			o %= 26
-			o += ord("A")
+			offset  = ord("A")
 		if(o>=ord("a") and o <= ord("z")):
-			o -= (ord("a"))
-			o -= b
-			o *= aInvers
-			o %= 26
-			o += ord("a")
+			offset  = ord("a")
+		o -= offset
+		o -= b
+		o *= aInvers
+		o %= 26
+		o += offset
 		result += chr(o)
 	return result
+	
+def transformCharToNumber(c):
+	i = ord(c)
+	if(i>=ord("A") and i <= ord("Z")):
+		i -= (ord("A"))
+	if(i>=ord("a") and i <= ord("z")):
+		i -= (ord("a"))
+	return i
 
 def breakWithKnownPlaintextPairs(m1,c1,m2,c2):
-	m1 = ord(m1)
-	m2 = ord(m2)
-	c1 = ord(c1)
-	c2 = ord(c2)
-	if(m1>=ord("A") and m1 <= ord("Z")):
-		m1 -= (ord("A"))
-	if(m1>=ord("a") and m1 <= ord("z")):
-		m1 -= (ord("a"))
-	if(m2>=ord("A") and m2 <= ord("Z")):
-		m2 -= (ord("A"))
-	if(m2>=ord("a") and m2 <= ord("z")):
-		m2 -= (ord("a"))
-	if(c1>=ord("A") and c1 <= ord("Z")):
-		c1 -= (ord("A"))
-	if(c1>=ord("a") and c1 <= ord("z")):
-		c1 -= (ord("a"))
-	if(c2>=ord("A") and c2 <= ord("Z")):
-		c2 -= (ord("A"))
-	if(c2>=ord("a") and c2 <= ord("z")):
-		c2 -= (ord("a"))
+	m1 = transformCharToNumber(m1)
+	m2 = transformCharToNumber(m2)
+	c1 = transformCharToNumber(c1)
+	c2 = transformCharToNumber(c2)
 	mTmp = (m2-m1) % 26
 	mInvers = invert(mTmp)
 	cTmp = (c2-c1) % 26
