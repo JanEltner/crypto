@@ -17,5 +17,8 @@ def calcMultiplicativeInverse(factor, modulo):
 		tmp = int(v - (q*t))
 		v = t
 		t = tmp
-	print("inverses: " +str(u%modulo))
+	print("multiplicative inverses: " +str(u%modulo))
+	print("gcd("+str(factor)+","+str(modulo) + ") = " + str(a))
+	print(str(a) + " = " + str(u) + "*" + str(factor) + " + (" + str(v) + ")*" + str(modulo))
 	return u
+calcMultiplicativeInverse(5, 7)
