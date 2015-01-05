@@ -1,39 +1,27 @@
 def multiplicativeInverse(a,b):
-	u = 1
-	t = 1
-	v = 0
-	s = 0
+	u,s = 1,0
+	r = lambda x,y:(int(x-(q*y)))
 	while(b>0):
-		tmp = a%b
-		q = (a-tmp)/b
-		a = b
-		b = tmp
-		tmp = u-(q*s)
-		u = s
-		s = tmp
-		tmp = v-(q*t)
-		v = t
-		t = tmp
+		q,a,b = int((a-a%b)/b),b,a%b
+		u,s = s,r(u,s)
 	return u
 
-
 def add(x1,x2,y1,y2,p):
-	tmp = multiplicativeInverse((x2-x1),p)
-	s = ((y2-y1)*tmp)%p
+	inv = multiplicativeInverse((x2-x1),p)
+	s = ((y2-y1)*inv)%p
 	x3 = ((s*s)-x1-x2)%p
 	y3 = (s*(x1-x3)-y1)%p
 	return x3,y3
 
 def double(x,y,a,p):
-	tmp = multiplicativeInverse((2*y),p)
-	s = ((3*x*x + a)*tmp)%p
+	inv = multiplicativeInverse((2*y),p)
+	s = ((3*x*x + a)*inv)%p
 	x3 = ((s*s)-2*x)%p
 	y3 = (s*(x-x3)-y)%p
 	return x3,y3
 
 def multiply(d,x,y,a,p):
-	xr = x
-	yr = y
+	xr,yr = x,y
 	binExp=bin(d)[3:]
 	for i in binExp:
 		xr,yr = double(xr,yr,a,p)
