@@ -1,9 +1,8 @@
 def multiplicativeInverse(a,b):
 	u,s = 1,0
-	r = lambda x,y:(int(x-(q*y)))
 	while(b>0):
 		q,a,b = int((a-a%b)/b),b,a%b
-		u,s = s,r(u,s)
+		u,s = s,int(u-(q*s))
 	return u
 
 def add(x1,x2,y1,y2,p):
