@@ -1,0 +1,23 @@
+\documentclass{article}
+\usepackage{amssymb}
+\usepackage[utf8]{inputenc}  % Umlaute-Darstellung unter Linux
+\usepackage[pdftex]{graphicx}
+\usepackage{eucal}
+\usepackage[pdftex]{graphicx}
+\usepackage{listings}
+
+\begin{document}
+\section*{CRT - Chinese Remainder Theorem}
+N=p*q with p and q prime. You want to solve some kind of function in mod N, with the Chinese Remainder Theorem you can solve it instead in mod p and mop q. \\[10pt]
+$x = x_p*q*(q^{-1}\ mod\ p) + x_q*p*(p^{-1}\ mod\ q)$\\[20pt]
+The chinese remainder theorem can also be used to solve systems of simultaneous congruences (withall $m_i$ are relative prime) of the form:\\[5pt]
+$x\ =\ a_1\ mod\ m_1$\\
+...\\
+$x\ =\ a_i\ mod\ m_i$\\
+...\\
+$x\ =\ a_k\ mod\ m_k$\\[10pt]
+This can be solved (if there is at least one solution) by:\\[5pt]
+$x = \sum\limits_{i=1}^k a_i*M_i*(M_i^{-1}\ mod\ m_i)$\\[10pt]
+with:\\[10pt]
+$M_i = \prod\limits_{n\in \lbrack1,..,k\rbrack/i}m_i$\\
+\end{document}
